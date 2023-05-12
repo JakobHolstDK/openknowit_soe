@@ -18,5 +18,4 @@ create_volume consul_data
 
 echo "Volumes created successfully"
 
-
-docker-compose -d up
+docker-compose up -d

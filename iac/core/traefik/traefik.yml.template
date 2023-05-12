@@ -1,0 +1,36 @@
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+  traefik:
+    address: ":8080"
+  sshgw:
+    address: ":2222"
+
+serversTransport:
+    insecureSkipVerify: true
+
+api:
+  dashboard: true
+  insecure: true
+
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: jakob.holst@knowit.dk
+      storage: acme.json
+      httpChallenge:
+        entryPoint: http
+      tlsChallenge: {}
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+log:
+  level: "trace"
+    #  filePath: "/tmp/traefik.log"
+ #format: "yaml"
+
+providers:
+  consul:
+    endpoints:
+      - "consul:8500"
+    rootKey: "traefik"
