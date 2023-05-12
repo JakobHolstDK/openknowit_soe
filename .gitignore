@@ -1,1 +1,3 @@
 /iac/core/docker-compose.yml
+/iac/core/traefik/traefik.yml
+
