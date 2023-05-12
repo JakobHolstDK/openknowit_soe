@@ -1,0 +1,68 @@
+version: "3"
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  traefik:
+    image: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.email=myemail@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--log.level=DEBUG"
+
+  structurizr-onpremises:
+    image: structurizr/onpremises
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      STRUCTURIZR_LICENSE: "your_license_key"
+
+  vault:
+    image: vault
+    restart: always
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "root"
+      VAULT_ADDR: "http://localhost:8200"
+    volumes:
+      - vault_data:/vault/data
+
+  consul:
+    image: consul
+    restart: always
+    ports:
+      - "8500:8500"
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    volumes:
+      - consul_data:/consul/data
+
+volumes:
+  mongodb_data:
+  vault_data:
+  consul_data:
+
